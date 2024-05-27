@@ -1,0 +1,221 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Api Documentation",
+    "description": "Api Documentation",
+    "termsOfService": "urn:tos",
+    "contact": {
+
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    },
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Inferred Url"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Blog Controller",
+      "description": "Blog Controller"
+    }
+  ],
+  "paths": {
+    "/blog": {
+      "get": {
+        "tags": [
+          "Blog Controller"
+        ],
+        "summary": "get a blog from the given blogId",
+        "operationId": "getOneBlogUsingGET",
+        "parameters": [
+          {
+            "name": "blogId",
+            "in": "query",
+            "description": "blogId",
+            "required": true,
+            "style": "form",
+            "allowReserved": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result?Blog?"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Blog Controller"
+        ],
+        "summary": "update one blog",
+        "operationId": "updateOneBlogUsingPUT",
+        "parameters": [
+          {
+            "name": "blogId",
+            "in": "query",
+            "description": "blogId",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "content",
+            "in": "query",
+            "description": "content",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result?Blog?"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Blog Controller"
+        ],
+        "summary": "create a new blog",
+        "operationId": "createOneBlogUsingPOST",
+        "parameters": [
+          {
+            "name": "content",
+            "in": "query",
+            "description": "content",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result?Blog?"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Blog Controller"
+        ],
+        "summary": "delete a blog",
+        "operationId": "deleteOneBlogUsingDELETE",
+        "parameters": [
+          {
+            "name": "blogId",
+            "in": "query",
+            "description": "blogId",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result?Blog?"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Blog": {
+        "title": "Blog",
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "Result?Blog?": {
+        "title": "Result?Blog?",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "$ref": "#/components/schemas/Blog"
+          },
+          "msg": {
+            "type": "string"
+          }
+        }
+      },
+      "Result?List?Blog??": {
+        "title": "Result?List?Blog??",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Blog"
+            }
+          },
+          "msg": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
