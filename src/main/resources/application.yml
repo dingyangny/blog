@@ -1,9 +1,9 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/apitrail?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    url: jdbc:mysql://mysql-blog:3306/apitrail?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: 123456
+    password: root
   jpa:
     show-sql: true
     properties:
@@ -12,6 +12,6 @@ spring:
         enable_lazy_load_no_trans: true
   servlet:
     multipart:
-      max-file-size: 200MB #ÉèÖÃÉÏ´«ÎÄ¼ş´óĞ¡²»µÃ³¬¹ı200MB
-      max-request-size: 200MB #ÉèÖÃÒ»´ÎÇëÇóµÄÊı¾İÁ¿²»µÃ³¬¹ı200MB
+      max-file-size: 200MB #è®¾ç½®ä¸Šä¼ æ–‡ä»¶å¤§å°ä¸å¾—è¶…è¿‡200MB
+      max-request-size: 200MB #è®¾ç½®ä¸€æ¬¡è¯·æ±‚çš„æ•°æ®é‡ä¸å¾—è¶…è¿‡200MB
       enabled: true
