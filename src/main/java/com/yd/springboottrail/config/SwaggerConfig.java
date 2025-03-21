@@ -13,7 +13,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 public class SwaggerConfig {
     @Bean
     Docket config() {
-        return new Docket(DocumentationType.OAS_30).useDefaultResponseMessages(false)
+        return new Docket(DocumentationType.SWAGGER_2).useDefaultResponseMessages(false)
                 .produces(Stream.of("application/xml", "application/json").collect(Collectors.toSet())).select()
                 .apis(RequestHandlerSelectors.basePackage("com.yd.springboottrail.controller"))
                 .paths(PathSelectors.any()).build()
