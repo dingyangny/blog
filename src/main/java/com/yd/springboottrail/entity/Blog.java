@@ -14,15 +14,23 @@ public class Blog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String content;
+    private Integer userId;
+    private Integer likes;
 
-    public Blog(){};
-
-    public Blog(String content){
-        this.content = content;
+    public Blog() {
+        this.likes = 0;
     }
 
-    public Blog(Integer id,String content){
-        this.id=id;
-        this.content=content;
+    public Blog(String content, Integer userId) {
+        this.content = content;
+        this.userId = userId;
+        this.likes = 0;
+    }
+
+    public Blog(Integer id, String content, Integer userId, Integer likes) {
+        this.id = id;
+        this.content = content;
+        this.userId = userId;
+        this.likes = likes;
     }
 }

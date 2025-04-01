@@ -1,8 +1,9 @@
 {
-  "openapi": "3.0.3",
+  "swagger": "2.0",
   "info": {
-    "title": "Api Documentation",
     "description": "Api Documentation",
+    "version": "1.0",
+    "title": "Api Documentation",
     "termsOfService": "urn:tos",
     "contact": {
 
@@ -10,20 +11,31 @@
     "license": {
       "name": "Apache 2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0"
-    },
-    "version": "1.0"
-  },
-  "servers": [
-    {
-      "url": "http://localhost:8080",
-      "description": "Inferred Url"
     }
-  ],
+  },
+  "host": "localhost:8081",
+  "basePath": "/",
   "tags": [
     {
       "name": "Blog Controller",
       "description": "Blog Controller"
+    },
+    {
+      "name": "Comment Controller",
+      "description": "Comment Controller"
+    },
+    {
+      "name": "User Controller",
+      "description": "User Controller"
     }
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "produces": [
+    "application/json",
+    "application/xml"
   ],
   "paths": {
     "/blog": {
@@ -31,72 +43,23 @@
         "tags": [
           "Blog Controller"
         ],
-        "summary": "get a blog from the given blogId",
-        "operationId": "getOneBlogUsingGET",
+        "summary": "get all blogs or blogs of a user",
+        "operationId": "getAllBlogsUsingGET",
         "parameters": [
           {
-            "name": "blogId",
+            "name": "userId",
             "in": "query",
-            "description": "blogId",
-            "required": true,
-            "style": "form",
-            "allowReserved": true,
-            "schema": {
-              "type": "string"
-            }
+            "description": "userId",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/Result?Blog?"
-                }
-              }
-            }
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "Blog Controller"
-        ],
-        "summary": "update one blog",
-        "operationId": "updateOneBlogUsingPUT",
-        "parameters": [
-          {
-            "name": "blogId",
-            "in": "query",
-            "description": "blogId",
-            "required": true,
-            "style": "form",
             "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "content",
-            "in": "query",
-            "description": "content",
-            "required": true,
-            "style": "form",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/Result?Blog?"
-                }
-              }
+              "$ref": "#/definitions/Result«List«Blog»»"
             }
           }
         }
@@ -106,28 +69,275 @@
           "Blog Controller"
         ],
         "summary": "create a new blog",
-        "operationId": "createOneBlogUsingPOST",
+        "operationId": "createBlogUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
         "parameters": [
           {
-            "name": "content",
-            "in": "query",
-            "description": "content",
+            "in": "body",
+            "name": "requestBody",
+            "description": "requestBody",
             "required": true,
-            "style": "form",
             "schema": {
-              "type": "string"
+              "$ref": "#/definitions/BlogCreateReqBody"
             }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/Result?Blog?"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/Result«Blog»"
+            }
+          }
+        }
+      }
+    },
+    "/blog/{blogId}/comment": {
+      "get": {
+        "tags": [
+          "Comment Controller"
+        ],
+        "summary": "get all comments comments of a blog",
+        "operationId": "getAllCommentsUsingGET",
+        "parameters": [
+          {
+            "name": "blogId",
+            "in": "path",
+            "description": "blogId",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Result«List«Comment»»"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Comment Controller"
+        ],
+        "summary": "create a new comment",
+        "operationId": "createCommentUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "blogId",
+            "in": "path",
+            "description": "blogId",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "body",
+            "name": "comment",
+            "description": "comment",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CommentCreateReqBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Result«Comment»"
+            }
+          }
+        }
+      }
+    },
+    "/blog/{blogId}/comment/{id}": {
+      "get": {
+        "tags": [
+          "Comment Controller"
+        ],
+        "summary": "get a comment by id",
+        "operationId": "getCommentByIdUsingGET",
+        "parameters": [
+          {
+            "name": "blogId",
+            "in": "path",
+            "description": "blogId",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Result«Comment»"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Comment Controller"
+        ],
+        "summary": "update a comment",
+        "operationId": "updateCommentUsingPUT",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "blogId",
+            "in": "path",
+            "description": "blogId",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "body",
+            "name": "comment",
+            "description": "comment",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CommentUpdateReqBody"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Result«Comment»"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Comment Controller"
+        ],
+        "summary": "删除评论",
+        "operationId": "deleteCommentUsingDELETE",
+        "parameters": [
+          {
+            "name": "blogId",
+            "in": "path",
+            "description": "blogId",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "userId",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Result«Void»"
+            }
+          }
+        }
+      }
+    },
+    "/blog/{id}": {
+      "get": {
+        "tags": [
+          "Blog Controller"
+        ],
+        "summary": "get a blog by id",
+        "operationId": "getBlogByIdUsingGET",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Result«Blog»"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Blog Controller"
+        ],
+        "summary": "update a blog",
+        "operationId": "updateBlogUsingPUT",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "body",
+            "name": "updateReqBody",
+            "description": "updateReqBody",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/BlogUpdateReqBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Result«Blog»"
             }
           }
         }
@@ -137,85 +347,453 @@
           "Blog Controller"
         ],
         "summary": "delete a blog",
-        "operationId": "deleteOneBlogUsingDELETE",
+        "operationId": "deleteBlogUsingDELETE",
         "parameters": [
           {
-            "name": "blogId",
-            "in": "query",
-            "description": "blogId",
+            "name": "id",
+            "in": "path",
+            "description": "id",
             "required": true,
-            "style": "form",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "userId",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "$ref": "#/definitions/Result«Void»"
+            }
+          }
+        }
+      }
+    },
+    "/user": {
+      "get": {
+        "tags": [
+          "User Controller"
+        ],
+        "summary": "get all users",
+        "operationId": "getAllUsersUsingGET",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Result«List«User»»"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "User Controller"
+        ],
+        "summary": "create a new user",
+        "operationId": "createUserUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "pwd",
+            "in": "query",
+            "description": "pwd",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "userName",
+            "in": "query",
+            "description": "userName",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Result«User»"
+            }
+          }
+        }
+      }
+    },
+    "/user/{id}": {
+      "get": {
+        "tags": [
+          "User Controller"
+        ],
+        "summary": "get a user by id",
+        "operationId": "getUserByIdUsingGET",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Result«User»"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "User Controller"
+        ],
+        "summary": "update a user",
+        "operationId": "updateUserUsingPUT",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "body",
+            "name": "user",
+            "description": "user",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
             }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/Result?Blog?"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/Result«User»"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "User Controller"
+        ],
+        "summary": "delete a user",
+        "operationId": "deleteUserUsingDELETE",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Result«Void»"
+            }
+          }
+        }
+      }
+    },
+    "/user/{id}/like": {
+      "post": {
+        "tags": [
+          "User Controller"
+        ],
+        "summary": "like a blog or a comment",
+        "operationId": "likeContentUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "targetId",
+            "in": "query",
+            "description": "targetId",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "type",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Result«Void»"
             }
           }
         }
       }
     }
   },
-  "components": {
-    "schemas": {
-      "Blog": {
-        "title": "Blog",
-        "type": "object",
-        "properties": {
-          "content": {
-            "type": "string"
-          },
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          }
+  "definitions": {
+    "Blog": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "likes": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "userId": {
+          "type": "integer",
+          "format": "int32"
         }
       },
-      "Result?Blog?": {
-        "title": "Result?Blog?",
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "data": {
-            "$ref": "#/components/schemas/Blog"
-          },
-          "msg": {
-            "type": "string"
-          }
+      "title": "Blog"
+    },
+    "BlogCreateReqBody": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "integer",
+          "format": "int32"
         }
       },
-      "Result?List?Blog??": {
-        "title": "Result?List?Blog??",
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Blog"
-            }
-          },
-          "msg": {
-            "type": "string"
-          }
+      "title": "BlogCreateReqBody"
+    },
+    "BlogUpdateReqBody": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "integer",
+          "format": "int32"
         }
-      }
+      },
+      "title": "BlogUpdateReqBody"
+    },
+    "Comment": {
+      "type": "object",
+      "properties": {
+        "blogId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "content": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "likes": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "userId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "Comment"
+    },
+    "CommentCreateReqBody": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "CommentCreateReqBody"
+    },
+    "CommentUpdateReqBody": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "CommentUpdateReqBody"
+    },
+    "Result«Blog»": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/Blog"
+        },
+        "msg": {
+          "type": "string"
+        }
+      },
+      "title": "Result«Blog»"
+    },
+    "Result«Comment»": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/Comment"
+        },
+        "msg": {
+          "type": "string"
+        }
+      },
+      "title": "Result«Comment»"
+    },
+    "Result«List«Blog»»": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Blog"
+          }
+        },
+        "msg": {
+          "type": "string"
+        }
+      },
+      "title": "Result«List«Blog»»"
+    },
+    "Result«List«Comment»»": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Comment"
+          }
+        },
+        "msg": {
+          "type": "string"
+        }
+      },
+      "title": "Result«List«Comment»»"
+    },
+    "Result«List«User»»": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          }
+        },
+        "msg": {
+          "type": "string"
+        }
+      },
+      "title": "Result«List«User»»"
+    },
+    "Result«User»": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/User"
+        },
+        "msg": {
+          "type": "string"
+        }
+      },
+      "title": "Result«User»"
+    },
+    "Result«Void»": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "msg": {
+          "type": "string"
+        }
+      },
+      "title": "Result«Void»"
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "password": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        }
+      },
+      "title": "User"
     }
   }
 }
