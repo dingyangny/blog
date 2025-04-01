@@ -1,4 +1,5 @@
 # REST API 博客项目
+管理blog、comment、user、like四种资源，包含16个endpoint
 
 功能：
 
