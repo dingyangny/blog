@@ -13,7 +13,7 @@
       "url": "http://www.apache.org/licenses/LICENSE-2.0"
     }
   },
-  "host": "localhost:8081",
+  "host": "blog-nginx:80",
   "basePath": "/",
   "tags": [
     {
@@ -25,7 +25,11 @@
       "description": "Comment Controller"
     },
     {
-      "name": "User Controller",
+      "name": "Topic Controller",
+      "description": "Topic Controller"
+    },
+    {
+      "name": "user-controller",
       "description": "User Controller"
     }
   ],
@@ -49,7 +53,7 @@
           {
             "name": "userId",
             "in": "query",
-            "description": "userId",
+            "description": "the id of the user whose blogs to retrieve, optional",
             "required": false,
             "type": "integer",
             "format": "int32"
@@ -76,8 +80,8 @@
         "parameters": [
           {
             "in": "body",
-            "name": "requestBody",
-            "description": "requestBody",
+            "name": "blog",
+            "description": "the body of the blog creation request",
             "required": true,
             "schema": {
               "$ref": "#/definitions/BlogCreateReqBody"
@@ -99,13 +103,13 @@
         "tags": [
           "Comment Controller"
         ],
-        "summary": "get all comments comments of a blog",
+        "summary": "get all comments of a blog",
         "operationId": "getAllCommentsUsingGET",
         "parameters": [
           {
             "name": "blogId",
             "in": "path",
-            "description": "blogId",
+            "description": "the id of the blog who owns the comments",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -133,7 +137,7 @@
           {
             "name": "blogId",
             "in": "path",
-            "description": "blogId",
+            "description": "the id of the blog who owns the comment",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -141,7 +145,7 @@
           {
             "in": "body",
             "name": "comment",
-            "description": "comment",
+            "description": "the body of the comment creation request",
             "required": true,
             "schema": {
               "$ref": "#/definitions/CommentCreateReqBody"
@@ -169,7 +173,7 @@
           {
             "name": "blogId",
             "in": "path",
-            "description": "blogId",
+            "description": "the id of the blog who owns the comment",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -177,7 +181,7 @@
           {
             "name": "id",
             "in": "path",
-            "description": "id",
+            "description": "the id of the comment",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -205,7 +209,7 @@
           {
             "name": "blogId",
             "in": "path",
-            "description": "blogId",
+            "description": "the id of the blog who owns the updating comment",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -213,7 +217,7 @@
           {
             "in": "body",
             "name": "comment",
-            "description": "comment",
+            "description": "the body of the comment update request",
             "required": true,
             "schema": {
               "$ref": "#/definitions/CommentUpdateReqBody"
@@ -222,7 +226,7 @@
           {
             "name": "id",
             "in": "path",
-            "description": "id",
+            "description": "the id of the comment to be updated",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -241,13 +245,13 @@
         "tags": [
           "Comment Controller"
         ],
-        "summary": "删除评论",
+        "summary": "delete a comment",
         "operationId": "deleteCommentUsingDELETE",
         "parameters": [
           {
             "name": "blogId",
             "in": "path",
-            "description": "blogId",
+            "description": "the id of the blog who owns the deleting comment",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -255,7 +259,7 @@
           {
             "name": "id",
             "in": "path",
-            "description": "id",
+            "description": "the id of the comment to be deleted",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -263,7 +267,7 @@
           {
             "name": "userId",
             "in": "query",
-            "description": "userId",
+            "description": "the id of the user requesting the deletion",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -290,7 +294,7 @@
           {
             "name": "id",
             "in": "path",
-            "description": "id",
+            "description": "the id of the blog to retrieve",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -316,21 +320,21 @@
         ],
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "description": "id",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
             "in": "body",
-            "name": "updateReqBody",
-            "description": "updateReqBody",
+            "name": "blog",
+            "description": "the body of the blog update request",
             "required": true,
             "schema": {
               "$ref": "#/definitions/BlogUpdateReqBody"
             }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "the id of the blog to update",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
           }
         ],
         "responses": {
@@ -352,7 +356,7 @@
           {
             "name": "id",
             "in": "path",
-            "description": "id",
+            "description": "the id of the blog to delete",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -360,7 +364,105 @@
           {
             "name": "userId",
             "in": "query",
-            "description": "userId",
+            "description": "the id of the user requesting the deletion",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Result«Void»"
+            }
+          }
+        }
+      }
+    },
+    "/topic": {
+      "get": {
+        "tags": [
+          "Topic Controller"
+        ],
+        "summary": "Get all topics",
+        "operationId": "getAllTopicsUsingGET",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Result«List«Topic»»"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Topic Controller"
+        ],
+        "summary": "Create a new topic",
+        "operationId": "createTopicUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "topic",
+            "description": "The body of the topic creation request",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TopicCreateReqBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Result«Topic»"
+            }
+          }
+        }
+      }
+    },
+    "/topic/{id}": {
+      "get": {
+        "tags": [
+          "Topic Controller"
+        ],
+        "summary": "Get a topic by ID",
+        "operationId": "getTopicByIdUsingGET",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the topic",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Result«Topic»"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Topic Controller"
+        ],
+        "summary": "Delete a topic by ID",
+        "operationId": "deleteTopicUsingDELETE",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the topic to be deleted",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -379,9 +481,9 @@
     "/user": {
       "get": {
         "tags": [
-          "User Controller"
+          "user-controller"
         ],
-        "summary": "get all users",
+        "summary": "get all the users",
         "operationId": "getAllUsersUsingGET",
         "responses": {
           "200": {
@@ -394,7 +496,7 @@
       },
       "post": {
         "tags": [
-          "User Controller"
+          "user-controller"
         ],
         "summary": "create a new user",
         "operationId": "createUserUsingPOST",
@@ -405,14 +507,14 @@
           {
             "name": "pwd",
             "in": "query",
-            "description": "pwd",
+            "description": "the user's password",
             "required": true,
             "type": "string"
           },
           {
             "name": "userName",
             "in": "query",
-            "description": "userName",
+            "description": "the user's name",
             "required": true,
             "type": "string"
           }
@@ -430,7 +532,7 @@
     "/user/{id}": {
       "get": {
         "tags": [
-          "User Controller"
+          "user-controller"
         ],
         "summary": "get a user by id",
         "operationId": "getUserByIdUsingGET",
@@ -438,7 +540,7 @@
           {
             "name": "id",
             "in": "path",
-            "description": "id",
+            "description": "the id of the user",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -455,7 +557,7 @@
       },
       "put": {
         "tags": [
-          "User Controller"
+          "user-controller"
         ],
         "summary": "update a user",
         "operationId": "updateUserUsingPUT",
@@ -466,7 +568,7 @@
           {
             "name": "id",
             "in": "path",
-            "description": "id",
+            "description": "the id of the user to be updating",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -474,10 +576,10 @@
           {
             "in": "body",
             "name": "user",
-            "description": "user",
+            "description": "the body of the updaing user request",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/User"
+              "$ref": "#/definitions/UserUpdateReqBody"
             }
           }
         ],
@@ -492,7 +594,7 @@
       },
       "delete": {
         "tags": [
-          "User Controller"
+          "user-controller"
         ],
         "summary": "delete a user",
         "operationId": "deleteUserUsingDELETE",
@@ -500,7 +602,7 @@
           {
             "name": "id",
             "in": "path",
-            "description": "id",
+            "description": "the id of the user to be deleting",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -519,7 +621,7 @@
     "/user/{id}/like": {
       "post": {
         "tags": [
-          "User Controller"
+          "user-controller"
         ],
         "summary": "like a blog or a comment",
         "operationId": "likeContentUsingPOST",
@@ -530,7 +632,7 @@
           {
             "name": "id",
             "in": "path",
-            "description": "id",
+            "description": "the id of the user who is liking a blog or a comment",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -538,7 +640,7 @@
           {
             "name": "targetId",
             "in": "query",
-            "description": "targetId",
+            "description": "the id of the target to be liked",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -546,9 +648,13 @@
           {
             "name": "type",
             "in": "query",
-            "description": "type",
+            "description": "the type of the target to be liked, it can be blog or comment",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "blog",
+              "comment"
+            ]
           }
         ],
         "responses": {
@@ -567,99 +673,150 @@
       "type": "object",
       "properties": {
         "content": {
-          "type": "string"
+          "type": "string",
+          "description": "the content of the blog"
         },
         "id": {
           "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "description": "the id of the blog"
         },
         "likes": {
           "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "description": "the number of likes for the blog"
+        },
+        "topics": {
+          "type": "string",
+          "description": "the topics associated with the blog. it's a string of topic names separated by commas"
         },
         "userId": {
           "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "description": "the id of the user who created the blog"
         }
       },
-      "title": "Blog"
+      "title": "Blog",
+      "description": "the entity of blog"
     },
     "BlogCreateReqBody": {
       "type": "object",
+      "required": [
+        "content",
+        "userId"
+      ],
       "properties": {
         "content": {
-          "type": "string"
+          "type": "string",
+          "description": "the content of the blog to be created"
+        },
+        "topics": {
+          "type": "string",
+          "description": "the topics related to the blog, it's a string separated by ','"
         },
         "userId": {
           "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "description": "the id of the user who is creating a blog"
         }
       },
-      "title": "BlogCreateReqBody"
+      "title": "BlogCreateReqBody",
+      "description": "the body of blog create request"
     },
     "BlogUpdateReqBody": {
       "type": "object",
+      "required": [
+        "content",
+        "userId"
+      ],
       "properties": {
         "content": {
-          "type": "string"
+          "type": "string",
+          "description": "the content of the blog to be updated"
+        },
+        "topics": {
+          "type": "string",
+          "description": "the topics related to the blog, it's a string separated by ','"
         },
         "userId": {
           "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "description": "the id of the user who is updating the blod"
         }
       },
-      "title": "BlogUpdateReqBody"
+      "title": "BlogUpdateReqBody",
+      "description": "the body of blog update request"
     },
     "Comment": {
       "type": "object",
       "properties": {
         "blogId": {
           "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "description": "the id of the blog that the comment belongs to"
         },
         "content": {
-          "type": "string"
+          "type": "string",
+          "description": "the content of the comment"
         },
         "id": {
           "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "description": "the id of the comment"
         },
         "likes": {
           "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "description": "the number of likes for the comment"
         },
         "userId": {
           "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "description": "the id of the user who made the comment"
         }
       },
-      "title": "Comment"
+      "title": "Comment",
+      "description": "the entity of comment"
     },
     "CommentCreateReqBody": {
       "type": "object",
+      "required": [
+        "content",
+        "userId"
+      ],
       "properties": {
         "content": {
-          "type": "string"
+          "type": "string",
+          "description": "the content of the comment to be created"
         },
         "userId": {
           "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "description": "the id of the user who is creating a comment"
         }
       },
-      "title": "CommentCreateReqBody"
+      "title": "CommentCreateReqBody",
+      "description": "the body of comment create request"
     },
     "CommentUpdateReqBody": {
       "type": "object",
+      "required": [
+        "content",
+        "userId"
+      ],
       "properties": {
         "content": {
-          "type": "string"
+          "type": "string",
+          "description": "the new content of the comment to be updated"
         },
         "userId": {
           "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "description": "the id of the user who is updaing the comment"
         }
       },
-      "title": "CommentUpdateReqBody"
+      "title": "CommentUpdateReqBody",
+      "description": "the body of comment update request"
     },
     "Result«Blog»": {
       "type": "object",
@@ -731,6 +888,25 @@
       },
       "title": "Result«List«Comment»»"
     },
+    "Result«List«Topic»»": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Topic"
+          }
+        },
+        "msg": {
+          "type": "string"
+        }
+      },
+      "title": "Result«List«Topic»»"
+    },
     "Result«List«User»»": {
       "type": "object",
       "properties": {
@@ -749,6 +925,22 @@
         }
       },
       "title": "Result«List«User»»"
+    },
+    "Result«Topic»": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/Topic"
+        },
+        "msg": {
+          "type": "string"
+        }
+      },
+      "title": "Result«Topic»"
     },
     "Result«User»": {
       "type": "object",
@@ -779,21 +971,79 @@
       },
       "title": "Result«Void»"
     },
+    "Topic": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "the description of the topic"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32",
+          "description": "the id of the topic"
+        },
+        "name": {
+          "type": "string",
+          "description": "the name of the topic, unique and no more than 10 characters"
+        }
+      },
+      "title": "Topic",
+      "description": "the entity of topic"
+    },
+    "TopicCreateReqBody": {
+      "type": "object",
+      "required": [
+        "description",
+        "name"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "the description of the topic to be created"
+        },
+        "name": {
+          "type": "string",
+          "description": "the name of the topic to be created"
+        }
+      },
+      "title": "TopicCreateReqBody",
+      "description": "the body of topic create request"
+    },
     "User": {
       "type": "object",
       "properties": {
         "id": {
           "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "description": "the id of the user"
         },
         "password": {
-          "type": "string"
+          "type": "string",
+          "description": "the password of the user"
         },
         "username": {
-          "type": "string"
+          "type": "string",
+          "description": "the name of the user, unique"
         }
       },
-      "title": "User"
+      "title": "User",
+      "description": "the entity of user"
+    },
+    "UserUpdateReqBody": {
+      "type": "object",
+      "properties": {
+        "password": {
+          "type": "string",
+          "description": "the new password of the user to be updated"
+        },
+        "username": {
+          "type": "string",
+          "description": "the new name of the user to be updated"
+        }
+      },
+      "title": "UserUpdateReqBody",
+      "description": "the body of user update request"
     }
   }
 }
