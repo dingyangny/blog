@@ -158,6 +158,9 @@ public class UserService {
                 commentRepository.save(comment);
             }
         }
+        else{
+            return ResponseEntity.ok(new Result<>(-1, "invalid type", null));
+        }
 
         return ResponseEntity.ok(new Result<>(0, "liked successfully", null));
     }
