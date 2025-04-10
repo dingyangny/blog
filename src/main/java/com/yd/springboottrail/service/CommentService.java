@@ -40,6 +40,9 @@ public class CommentService {
         if (comment.getContent() == null || comment.getContent().isEmpty()) {
             return ResponseEntity.ok(new Result<>(-1, "comment content cannot be empty", null));
         }
+        if (comment.getContent().length() > 256) {
+            return ResponseEntity.ok(new Result<>(-1, "comment content is too long", null));
+        }
 
 
         Comment newComment = commentRepository.save(new Comment(blogId, comment.getUserId(), comment.getContent()));
@@ -94,12 +97,16 @@ public class CommentService {
             return ResponseEntity.ok(new Result<>(-1, "no permission to modify this comment", null));
         }
 
-        if (existingComment.getContent().equals(comment.getContent())) {
-            return ResponseEntity.ok(new Result<>(-1, "no changes made to the content", null));
-        }
-
         if (comment.getContent() == null || comment.getContent().isEmpty()) {
             return ResponseEntity.ok(new Result<>(-1, "comment content cannot be empty", null));
+        }
+
+        if (comment.getContent().length() > 256) {
+            return ResponseEntity.ok(new Result<>(-1, "comment content is too long", null));
+        }
+
+        if (existingComment.getContent().equals(comment.getContent())) {
+            return ResponseEntity.ok(new Result<>(-1, "no changes made to the content", null));
         }
 
         existingComment.setContent(comment.getContent());

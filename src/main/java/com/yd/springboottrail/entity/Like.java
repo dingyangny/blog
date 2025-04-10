@@ -6,16 +6,19 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
+
 
 @Entity
+@Table(name = "`like`")
 @Data
 public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id; // 点赞ID
-    private Integer targetId; // 目标ID（博客或评论的ID）
-    private Integer userId; // 用户ID
-    private Integer type; // 类型（1表示博客点赞，2表示评论点赞）
+    private Integer id;
+    private Integer targetId;
+    private Integer userId;
+    private Integer type; // blog: 1, comment: 2
 
     public Like() {
     }

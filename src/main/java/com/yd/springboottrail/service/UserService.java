@@ -9,6 +9,8 @@ import com.yd.springboottrail.repository.BlogRepository;
 import com.yd.springboottrail.repository.CommentRepository;
 import com.yd.springboottrail.repository.LikeRepository;
 import com.yd.springboottrail.repository.UserRepository;
+import com.yd.springboottrail.vo.UserUpdateReqBody;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -67,21 +69,29 @@ public class UserService {
                 .orElse(ResponseEntity.ok(new Result<>(-1, "user not found", null)));
     }
 
-    public ResponseEntity<Result<User>> updateUser(Integer id, User user) {
+    public ResponseEntity<Result<User>> updateUser(Integer id, UserUpdateReqBody userToBeUpdated) {
         if (!userRepository.existsById(id)) {
             return ResponseEntity.ok(new Result<>(-1, "user not found", null));
         }
-        // check if the username is empty
-        if (user.getUsername() == null || user.getUsername().isEmpty()) {
-            return ResponseEntity.ok(new Result<>(-1, "username cannot be empty", null));
+
+        // get the user to be update
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            return ResponseEntity.ok(new Result<>(-1, "user not found", null));
         }
-        // check if the username already exists
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            return ResponseEntity.ok(new Result<>(-1, "username already exists", null));
+
+        // update the username
+        if (userToBeUpdated.getUsername() != null && !userToBeUpdated.getUsername().isEmpty()) {
+            // check if the username already exists
+            if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+                return ResponseEntity.ok(new Result<>(-1, "username already exists", null));
+            }
+            user.setUsername(userToBeUpdated.getUsername());
         }
-        // check if the password is empty
-        if (user.getPassword() == null || user.getPassword().isEmpty()) {
-            return ResponseEntity.ok(new Result<>(-1, "password cannot be empty", null));
+
+        // update the password
+        if (userToBeUpdated.getPassword() != null && !userToBeUpdated.getPassword().isEmpty()) {
+            user.setPassword(userToBeUpdated.getPassword());
         }
 
         // update user information
