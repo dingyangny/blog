@@ -129,6 +129,12 @@ public class UserService {
         if (!userRepository.existsById(userId)) {
             return ResponseEntity.ok(new Result<>(-1, "user not found", null));
         }
+
+        // check if the type is valid
+        if (!type.equals("blog") && !type.equals("comment")) {
+            return ResponseEntity.ok(new Result<>(-1, "invalid type", null));
+        }
+
         // check if the target content exists
         if (type.equals("blog") && !blogRepository.existsById(targetId)) {
             return ResponseEntity.ok(new Result<>(-1, "blog not found", null));
