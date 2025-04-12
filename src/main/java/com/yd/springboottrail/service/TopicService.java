@@ -21,7 +21,7 @@ public class TopicService {
         if (topic.getName() == null || topic.getName().isEmpty()) {
             return ResponseEntity.ok(new Result<>(-1, "topic name cannot be empty", null));
         }
-        if (topic.getName().length() > 10 || topic.getName().length() < 3) {
+        if (topic.getName().length() > 8 || topic.getName().length() < 3) {
             return ResponseEntity.ok(new Result<>(-1, "topic name cannot exceed 10 characters and less than 3 characters", null));
         }
         if (!topic.getName().matches("[a-z]+")) {
